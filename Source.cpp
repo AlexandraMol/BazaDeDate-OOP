@@ -51,6 +51,29 @@ class TABELA
 
 };
 
+class INDEX:public TABELA
+{
+public:
+TABELA:nume_coloana;
+		INDEX() ///Setare valoare implicita
+		{
+			nume_coloana = "";
+			
+		}
+
+		///constructor copiere
+		INDEX(const INDEX& ind)
+		{
+			nume_coloana = ind.nume_coloana;
+		}
+
+		///operator=
+		INDEX& operator=(const INDEX& ind)
+		{
+			nume_coloana = ind.nume_coloana;
+		}
+};
+
 
 ///CLASELE CHILD CA FIIND CREATE , DROP DISPLAY.
 
