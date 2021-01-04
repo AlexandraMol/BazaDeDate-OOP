@@ -236,6 +236,30 @@ void TABELA_INPUT::DELETE_COLOANA(TABELA_INPUT* x, string nume)
 		}
 	}
 }
+
+void TABELA_INPUT::serializare()
+{
+	ofstream g("tabela_input.bin", ios::binary);
+	g.write((char*)&dim, sizeof(dim));
+	for (int i = 0; i<dim; i++)
+	{
+		g.write((char*)&valori_rand[i], sizeof(valori_rand[i]));
+	}
+	g.close();
+}
+
+void TABELA_INPUT::deserializare()
+{
+	ifstream g("tabela.bin", ios::binary);
+	g.read((char*)&dim, sizeof(dim));
+	delete[] valori_rand;
+	valori_rand = new string[dim];
+	for (int i = 0; i < dim; i++)
+	{
+		g.read((char*)&valori_rand[i], sizeof(valori_rand[i]));
+	}
+}
+
 ostream& operator<<(ostream& o, TABELA_INPUT tab)
 {
 	o << (TABELA)tab << endl;
