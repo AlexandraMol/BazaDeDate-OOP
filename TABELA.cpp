@@ -340,6 +340,60 @@ void TABELA::DISPLAY(TABELA* tabela,string nume_tabela)
 		cout << tabela->nume_coloana[i] << " " << tabela->tip_coloana[i] << " " << tabela->dimensiune[i] << endl;
 }
 
+void TABELA::serializare()
+{
+	ofstream f("tabela.bin",ios::binary);
+	int lenght = nume_tabela.length();
+	f.write((char*)&lenght, sizeof(lenght));
+	f.write(nume_tabela.c_str(), lenght + 1);
+	f.write((char*)&numar_coloane, sizeof(numar_coloane));
+	for (int i = 0; i < numar_coloane; i++)
+	{
+		f.write((char*)&nume_coloana[i], sizeof(nume_coloana[i]));
+	}
+	f.write((char*)&numar_tip_coloana, sizeof(numar_tip_coloana));
+	for (int i = 0; i < numar_tip_coloana; i++)
+	{
+		f.write((char*)&tip_coloana[i], sizeof(tip_coloana[i]));
+	}
+	for (int i = 0; i < numar_tip_coloana; i++)
+	{
+		f.write((char*)&dimensiune[i], sizeof(dimensiune[i]));
+	}
+	f.close();
+}
+
+void TABELA::deserializare()
+{
+	ifstream f("tabela.bin", ios::binary);
+	int length = 0;
+	f.read((char*)&length, sizeof(length));
+	char* aux = new char[length + 1];
+	f.read(aux, length + 1);
+	nume_tabela = aux;
+	delete[] aux;
+	f.read((char*)&numar_coloane, sizeof(numar_coloane));
+	delete[] nume_coloana;
+	nume_coloana = new string[numar_coloane];
+	for (int i = 0; i < numar_coloane; i++)
+	{
+		f.read((char*)&nume_coloana[i], sizeof(nume_coloana[i]));
+	}
+	f.read((char*)&numar_tip_coloana, sizeof(numar_tip_coloana));
+	delete[] tip_coloana;
+	tip_coloana = new string[numar_tip_coloana];
+	for (int i = 0; i < numar_tip_coloana; i++)
+	{
+		f.read((char*)&tip_coloana[i], sizeof(tip_coloana[i]));
+	}
+	delete[] dimensiune;
+	dimensiune = new int[numar_tip_coloana];
+	for (int i = 0; i < numar_tip_coloana; i++)
+	{
+		f.read((char*)&dimensiune[i], sizeof(dimensiune[i]));
+	}
+	
+}
 
 
 ostream& operator<<(ostream& o, TABELA tab)
