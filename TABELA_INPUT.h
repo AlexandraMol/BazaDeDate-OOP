@@ -22,6 +22,8 @@ public:
 	void setValori_rand(string*, int);
 	void UPDATE(TABELA_INPUT*, TABELA*, string, string);
 	void INSERT_COLOANA(TABELA_INPUT*, string*, int);
+	void serializare();
+	void deserializare();
 	friend ostream& operator<<(ostream&, TABELA_INPUT);
 	friend istream& operator>>(istream&, TABELA_INPUT&);
 
