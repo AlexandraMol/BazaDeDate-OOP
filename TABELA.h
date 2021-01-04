@@ -24,6 +24,8 @@ public:
 	TABELA& operator=(const TABELA&);
 	void DROP_TABLE(TABELA*);
 	void DISPLAY(TABELA*,string);
+	void serializare();
+	void deserializare();
 	friend ostream& operator<<(ostream&, TABELA);
 	friend istream& operator>>(istream&, TABELA&);
 	
