@@ -308,3 +308,56 @@ ostream& operator<<(ostream& o, TABELA_INPUT tab)
 
 	 return i;
  }
+
+ofstream& operator<<(ofstream& o, TABELA_INPUT tab)
+{
+	o << (TABELA)tab << endl;
+
+	o << "Numar de coloane: ";
+	o << tab.dim << endl;
+
+	if (tab.valori_rand != nullptr)
+	{
+		for (int i = 0; i < tab.dim; i++)
+			o << tab.valori_rand[i] << " ";
+	}
+	else
+	{
+		o << "N/A";
+	}
+
+	return o;
+}
+
+ifstream& operator>>(ifstream& i, TABELA_INPUT& tab)
+{
+
+	i >> (TABELA&)tab;
+
+	cout << "Numar de coloane: ";
+	i >> tab.dim;
+
+	if (tab.valori_rand != nullptr)
+	{
+		delete[] tab.valori_rand;
+	}
+	cout << "Valorile de pe rand: ";
+
+	if (tab.dim > 0)
+	{
+		tab.valori_rand = new string[tab.dim];
+		for (int j = 0; j < tab.dim; j++)
+		{
+			i >> tab.valori_rand[j];
+		}
+
+	}
+	else
+	{
+		tab.dim = 0;
+		tab.valori_rand = nullptr;
+	}
+
+
+	return i;
+}
