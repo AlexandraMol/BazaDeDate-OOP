@@ -28,6 +28,8 @@ public:
 	void deserializare();
 	friend ostream& operator<<(ostream&, TABELA);
 	friend istream& operator>>(istream&, TABELA&);
+	friend ofstream& operator<<(ofstream&, TABELA);
+	friend ifstream& operator>>(ifstream&, TABELA&);
 	
 private:
 	string nume_tabela;
