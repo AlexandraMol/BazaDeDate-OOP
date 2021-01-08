@@ -2,184 +2,142 @@
 #include "TABELA.h"
 using namespace std;
 
-class Menu {
+class Menu
+{
 	string comanda;
 	int alegere = 0;
 	string options;
 public:
 	void menu()
-	{
-		
-		TABELA* A = new TABELA[3];
-		TABELA_INPUT* B = new TABELA_INPUT[3];
-		cout << "Bun venit in baza noastra de date" << endl;
+	{	
+		TABELA* A = new TABELA[10];
+
+		TABELA_INPUT* B = new TABELA_INPUT[30];
+
+		TABELA C[10];
+		cout << "Pentru a parasi baza de date tastati de 2 ori EXIT"<<endl;
+		int nr_de_col;
+		string valoare;
+		string nume_tabela2;
+		string nume_tabela;
+		string tabela;
+		string comanda;
+		int ok;
+		int x=0;
+		string nume_coloana[30];
+		string tip_coloana[30];
+		int dimensiune[30];
 		do
 		{
 
-			cout << "Pentru comenzi legate de gestionarea structurii bazei de date apasati 1" << endl;
-			cout << "Pentru comenzi legate de gestionarea datelor apasati 2" << endl;
-			cout << "Pentru a parasi baza de date apasati 3" << endl;
-			cout << "Alege un tip de comanda" << endl;
-			cin >> alegere;
+			/*A[0].nume_tabela = "x";
+			A[0].numar_coloane = 3;
+			string vectori_test[3] = { "NUME","PRENUME","VARSTA" };
+			A[0].numar_tip_coloana = 3;
+			string vectori_test2[3] = { "VARCHAR","VARCHAR","INTEGER" };
+			int dim[3] = { 1,2,3 };
+			A[0].CREATE_TABLE(A + 0,"x", vectori_test, 3, vectori_test2, 3, dim);*/
 
-			switch (alegere)
+		
+			//cout << endl;
+			string vectori_valori[3] = { "ANA","MARIA","21"};
+
+
+			comanda = "";
+			tabela = "";
+			cin >> comanda;
+			cin >> ws;
+			cin >> tabela;
+			if (comanda=="CREATE"&&tabela=="TABLE")
 			{
-			case 1:
+				nume_tabela = "";
+				cin >> nume_tabela;
+				
+			
+			
+				for (int i = x; i < 10; i++)
+				{
+					if (A[i].nume_tabela == nume_tabela)
+					{
+						cout << "Aceasta tabela este deja creata";
+						break; /// sa se iasa din for
+					}
+
+					else if (A[i].nume_tabela == "")
+					{
+						///aici se creaza noua tabela;
+						
+						cout << "Cate coloane doriti sa aiba tabela? ";
+						cin >> nr_de_col;
+						
+						for (int j = 0; j < nr_de_col; j++)
+						{	
+							cin >> nume_coloana[j];
+							cin >> tip_coloana[j];
+							cin >> dimensiune[j];
+						}
+
+						A[i].CREATE_TABLE(A + i, A[i].nume_tabela, nume_coloana, nr_de_col, tip_coloana, nr_de_col, dimensiune);
+						x++;
+						break;
+					}
+
+				}
+					
+			}
+			
+
+	
+			//A[0].DISPLAY(A + 0, "STUD");
+
+			//A[0].DROP_TABLE(A + 0);
+
+			if (comanda == "DISPLAY" && tabela == "TABLE")
 			{
 				
-				int alegere_tabela;
-
-				do
-				{
-					cout << "Pentru CREATE TABLE tastati tasta 1" << endl;
-					cout << "Pentru DISPLAY TABLE tastati tasta 2" << endl;
-					cout << "Pentru DROP TABLE tastati tasta 3" << endl;
-					cout << "Pentru a reveni in meniul principal tastati tasta 4" << endl;
-					
-					cin >> alegere_tabela;
-
-					switch (alegere_tabela)
-					{
-					case 1:
-					{	
-					int numar;
-					string table_name;
-					string nume_coloana[3];
-					string tip_coloana[3];
-					int dimensiune[3];
-
-					
-					cout << "CREATE TABLE table_name: ";
-					cin >> table_name; 
-					A[1].nume_tabela=table_name;
-					
-
-					cout << "Cate coloane vreti sa aiba tabela (minim 1): ";
-						cin >> numar;
-
-						if (numar < 1)
-
-							cout << "Numarul nu respecta conditia "<<endl;
-
-						else
-						{
-
-
-							cout << "(";
-							for (int i = 0; i < numar; i++)
-							{
-								cout << "(";
-								cin >> nume_coloana[i];
-								cout << ",";
-								cin >> tip_coloana[i];
-								cout << ",";
-								cin >> dimensiune[i];
-								cout << ")";
-							}
-							cout << ")";
-							
-							
-							A[1].CREATE_TABLE(A + 1, A[1].nume_tabela, nume_coloana, numar, tip_coloana, numar, dimensiune);
-
-						}
-					}
-					break;
-
-					case 2:
-					{
-						A[1].DISPLAY(A + 1,A[1].nume_tabela);
-					}
-					break;
-
-					case 3:
-					{
-						A[1].DROP_TABLE(A + 1);
-						cout << endl;
-					}
-					break;
-
-					case 4:
-					{
-
-					}
-					break;
-
-					default: cout << "Cifra pe care ati tastat-o este incorecta. Incercati din nou " << endl;
-						break;
-					}
-
-				} while (alegere_tabela != 4);
-			}
-			break;
-
-			case 2:
-			{	int table_name;
-				int alegere_date;
-				do
+				cin >> nume_tabela2;
+				ok = 0;
+				for (int i = 0; i < 10; i++)
 				{	
-
-					cout << "Pentru INSERT INTO tastati 1" << endl;
-					cout << "Pentru DELETE FROM tastati 2" << endl;
-					cout << "Pentru SELECT tastati 3" << endl;
-					cout << "Pentru UPDATE tastati 4" << endl;
-					cout << "Pentru a reveni in meniul principal tastati tasta 5" << endl;
-					cin >> alegere_date;
-
-					switch (alegere_date)
+					
+					if (A[i].nume_tabela == nume_tabela2)
 					{
-					case 1:
-					{	int x;
-						
-
+						A[i].DISPLAY(A + i, nume_tabela2);	
+						ok = 1; 
 					}
-					break;
-
-					case 2:
-					{
-
-					}
-					break;
-
-					case 3:
-					{
-
-					}
-					break;
-
-					case 4:
-					{
-
-					}
-					break;
-
-					case 5: 
-					{
-
-					}
-					break;
-
-					break;
-					default: cout << "Cifra pe care ati tastat-o este incorecta. Incercati din nou " << endl;
-						break;
-					}
-
-				} while (alegere_date != 5);
+					
+					
+				}
+				if (ok == 0)
+					cout << "Nu s-a gasit tabela ceruta";
 			}
-			break;
+			
 
-			case 3: {cout << "Va dorim o zi frumoasa in continuare si va multumim ca ati accesat baza noastra de date!"; }
+			if (comanda == "DROP" && tabela == "TABLE")
+			{
+				nume_tabela = "";
+				cin >> nume_tabela;
+				int ok = 0;
+				for (int i = 0; i < 10; i++)
+				{
+					if (A[i].nume_tabela == nume_tabela)
+					{
+						A[i].DROP_TABLE(A + i);
+						ok = 1; i = 10;
+					}
 
-				  break;
 
-
-			default: cout << "Cifra pe care ati tastat-o este incorecta. Incercati din nou " << endl;
-				break;
+				}
+				if (ok == 0)
+					cout << "Nu s-a gasit tabela ceruta";
 			}
 
 
 
+		} while (comanda!="EXIT");
 
-		} while (alegere != 3);
+		for (int i = 0; i < 10; i++)
+			cout << A[i];
 	}
 };
 
@@ -187,74 +145,98 @@ public:
 
 int main()
 {
-	//Menu x;
-	//x.menu();
+	Menu x;
+	x.menu();
 
-	string D[3] = { "NUME","PRENUME","VARSTA" };
+	////TABELA* A = new TABELA[2];
 
-	//cout << T1.nume_coloana[1] << endl;
-	//cout << T1;
+	////A[1].setNume_Tabela("x");
+	////A[1].DISPLAY(A + 1, "x");
 
+	//
+	////string D[3] = { "NUME","PRENUME","VARSTA" };
 
+	//////cout << T1.nume_coloana[1] << endl;
+	//////cout << T1;
+	//TABELA* A = new TABELA[10];
+	//
+	//string vectori_test[3] = { "NUME","PRENUME","VARSTA" };
+	//
+	//string vectori_test2[3] = { "VARCHAR","VARCHAR","INTEGER" };
+	//int dim[3] = { 1,2,3 };
+	//A[3].CREATE_TABLE(A + 3, "x", vectori_test, 3, vectori_test2, 3, dim);
+	//cout <<A[3];
 
-	string B[3] = { "VARCHAR","VARCHAR","INTEGER" };
+	//
+	//	string **array = new string*[2];
 
-	int vector[3] = { 3,3,3 };
+	//	for (int i = 1; i <= 2; ++i)
+	//		array[i] = new string[3];
+	//
 
-	TABELA* A = new TABELA[3];
+	//	
+	//		
+	//	TABELA_INPUT X(array, 3, 2, A + 3);
+	//	cout << X;
 
+	//string B[3] = { "VARCHAR","VARCHAR","INTEGER" };
 
-	A[1] = TABELA(D, 3, B, 3, vector);
+	//int vector[3] = { 3,3,3 };
 
-	A[1].DISPLAY(A + 1,"student");
-
-	cout << endl;
-
-	A[2].CREATE_TABLE(A + 2,"elev", D, 3, B, 3, vector);
-
-	cout << A[2];
-	cout << endl;
-
-	///A[1].DROP_TABLE(A + 1);
-
-
-
-	cout << endl;
-	cout << "Verificari pentru tabela_input" << endl;
-
-	string valori[3] = { "M","A","20" };
-
-	TABELA_INPUT* tabela_input = new TABELA_INPUT[3];
-
-	
-
-	tabela_input[1] = TABELA_INPUT(valori, 3, A + 1);
-	cout << tabela_input[1]<<endl;
-
-	///TESTARE SELECT
-	string up[1] = { "NUME" };
-	tabela_input[1].SELECT_COLOANA(tabela_input + 1, up, 1);
-	cout << endl;
-	string select[3] = { "VARSTA","NUME","PRENUME" };
-	tabela_input[1].SELECT_COLOANA(tabela_input + 1, select, 3);
+	//TABELA* A = new TABELA[3];
 
 
-	///TESTARE UPDATE;
+	//A[1] = TABELA(D, 3, B, 3, vector);
 
-	tabela_input[1].UPDATE(tabela_input + 1, A + 1, "ANI", "VARSTA");
-	cout << tabela_input[1];
-	cout << endl;
+	//A[1].DISPLAY(A + 1,"student");
+
+	//cout << endl;
+
+	//A[2].CREATE_TABLE(A + 2,"elev", D, 3, B, 3, vector);
+
+	//cout << A[2];
+	//cout << endl;
+
+	/////A[1].DROP_TABLE(A + 1);
 
 
-	///TESTARE DELETE
-	tabela_input[1].DELETE_COLOANA(tabela_input + 1, "NUME");
-	cout << tabela_input[1];
-	cout << endl;
-	
-	///TESTARE INSERT
-	
-	string valori2[3] = { "M","A","20" };
-	tabela_input[1].INSERT_COLOANA(tabela_input + 1, valori2, 3);
+
+	//cout << endl;
+	//cout << "Verificari pentru tabela_input" << endl;
+
+	//string valori[3] = { "M","A","20" };
+
+	//TABELA_INPUT* tabela_input = new TABELA_INPUT[3];
+
+	//
+
+	//tabela_input[1] = TABELA_INPUT(valori, 3, A + 1);
+	//cout << tabela_input[1]<<endl;
+
+	/////TESTARE SELECT
+	//string up[1] = { "NUME" };
+	//tabela_input[1].SELECT_COLOANA(tabela_input + 1, up, 1);
+	//cout << endl;
+	//string select[3] = { "VARSTA","NUME","PRENUME" };
+	//tabela_input[1].SELECT_COLOANA(tabela_input + 1, select, 3);
+
+
+	/////TESTARE UPDATE;
+
+	//tabela_input[1].UPDATE(tabela_input + 1, A + 1, "ANI", "VARSTA");
+	//cout << tabela_input[1];
+	//cout << endl;
+
+
+	/////TESTARE DELETE
+	//tabela_input[1].DELETE_COLOANA(tabela_input + 1, "NUME");
+	//cout << tabela_input[1];
+	//cout << endl;
+	//
+	/////TESTARE INSERT
+	//
+	//string valori2[3] = { "M","A","20" };
+	//tabela_input[1].INSERT_COLOANA(tabela_input + 1, valori2, 3);
 
 
 
