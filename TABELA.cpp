@@ -500,3 +500,103 @@ istream& operator>>(istream& in, TABELA& tab)
 	return in;
 }
 
+ofstream& operator<<(ofstream& out, TABELA t)
+{
+	out << t.nume_tabela;
+	out << t.numar_coloane;
+	if (t.nume_coloana != nullptr && t.numar_coloane > 0)
+	{
+	for(int i=0 ;i<t.numar_coloane;i++)
+		out << t.nume_coloana[i]<<" ";
+	}
+	else
+	{
+		out << "N/A";
+	}
+	out  << t.numar_tip_coloana;
+	if (t.tip_coloana != nullptr && t.numar_tip_coloana > 0)
+	{
+	for(int i=0;i<t.numar_tip_coloana;i++)
+		out  << t.tip_coloana[i];
+	}
+	else
+	{
+		out << "N/A";
+	}
+	if (t.dimensiune != nullptr && t.numar_tip_coloana > 0)
+	{
+	for(int i=0;i<t.numar_tip_coloana;i++)
+		out  << t.dimensiune[i];
+	}
+	else
+	{
+		out << "N/A";
+	}
+	return out;
+}
+
+ifstream& operator>>(ifstream& in, TABELA t)
+{
+	cout<<"Numar coloane = ";
+	if(t.nume_coloana != nullptr)
+	{
+		delete[] t.nume_coloana;
+	}
+	if(in.good() && t.numar_coloane>0)
+	{
+		t.nume_coloana = new string[t.numar_coloane];
+		for(int i=0 ;i<t.numar_coloane;i++)
+		{
+			cout<<"nume_coloana["<<i<<"]=";
+			in>>t.nume_coloana[i];
+		}
+	}
+	else
+	{
+		t.numar_coloane=0;
+		t.nume_coloana=nullptr;
+	}
+	
+	cout<<"Numar tip coloane = ";
+	if(t.tip_coloana != nullptr)
+	{
+		delete[] t.tip_coloana;
+	}
+	if(in.good() && t.numar_tip_coloana>0)
+	{
+		t.tip_coloana = new string[t.tip_coloane];
+		for(int i=0 ;i<t.numar_tip_coloana;i++)
+		{
+			cout<<"tip_coloana["<<i<<"]=";
+			in>>t.tip_coloana[i];
+		}
+	}
+	else
+	{
+		t.numar_tip_coloana=0;
+		t.tip_coloana=nullptr;
+	}
+		
+	cout<<"Numar tip coloane = ";
+	if(t.dimensiune != nullptr)
+	{
+		delete[] t.dimensiune;
+	}
+	if(in.good() && t.dimensiune>0)
+	{
+		t.dimensiune = new string[t.tip_coloane];
+		for(int i=0 ;i<t.numar_tip_coloana;i++)
+		{
+			cout<<"dimensiune["<<i<<"]=";
+			in>>t.dimensiune[i];
+		}
+	}
+	else
+	{
+		t.numar_tip_coloana=0;
+		t.dimensiune=nullptr;
+	}
+		
+	return in;	
+		
+}	
