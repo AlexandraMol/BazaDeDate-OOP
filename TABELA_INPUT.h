@@ -26,6 +26,8 @@ public:
 	void deserializare();
 	friend ostream& operator<<(ostream&, TABELA_INPUT);
 	friend istream& operator>>(istream&, TABELA_INPUT&);
+	friend ofstream& operator<<(ofstream&, TABELA_INPUT);
+	friend ifstream& operator>>(ifstream&, TABELA_INPUT&);
 
 
 private:
