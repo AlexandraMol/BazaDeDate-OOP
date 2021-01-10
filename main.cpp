@@ -1,3 +1,6 @@
+#include <fstream>
+#include <sstream>
+#include <iostream>
 #include "TABELA_INPUT.h"
 #include "TABELA.h"
 using namespace std;
@@ -12,16 +15,24 @@ public:
 	{	
 		TABELA* A = new TABELA[10];
 
-		TABELA_INPUT* B = new TABELA_INPUT[30];
+		TABELA_INPUT* B = new TABELA_INPUT[100];
 
-		TABELA C[10];
+		
 		cout << "Pentru a parasi baza de date tastati de 2 ori EXIT"<<endl;
+		string filename;
+
+		ofstream files;
+		string nume;
 		int nr_de_col;
 		string valoare;
 		string nume_tabela2;
 		string nume_tabela;
 		string tabela;
 		string comanda;
+		string vector_select[10];
+		string valori_implicite[10];
+		string numar;
+		string var;
 		int ok;
 		int x=0;
 		string nume_coloana[30];
@@ -42,6 +53,8 @@ public:
 			//cout << endl;
 			string vectori_valori[3] = { "ANA","MARIA","21"};
 
+		
+		
 
 			comanda = "";
 			tabela = "";
@@ -75,10 +88,48 @@ public:
 							cin >> nume_coloana[j];
 							cin >> tip_coloana[j];
 							cin >> dimensiune[j];
+							valori_implicite[j] = "0";
+
 						}
 
+
+
+						A[i].nume_tabela = nume_tabela;
 						A[i].CREATE_TABLE(A + i, A[i].nume_tabela, nume_coloana, nr_de_col, tip_coloana, nr_de_col, dimensiune);
+
+
+						for (int j = x; j < 100; j = j + 10)
+						{
+							B[j] = TABELA_INPUT(valori_implicite, nr_de_col, A + i);
+							//cout << B[j] << endl;
+							//cout << j<<endl;
+						}
+						
+						stringstream a;
+
+						a << i;
+
+						filename = "tabela_" + a.str();
+
+						filename += ".txt";
+
+						cout << filename << endl;
+
+
+						///de implementantat pentru n files;
+						A[i].serializare();
+						
+
+						files.open(filename.c_str(), ios::out);
+
+						files << A[i];
+
+						files.close();
+
 						x++;
+
+						
+
 						break;
 					}
 
@@ -86,13 +137,9 @@ public:
 					
 			}
 			
+		
 
-	
-			//A[0].DISPLAY(A + 0, "STUD");
-
-			//A[0].DROP_TABLE(A + 0);
-
-			if (comanda == "DISPLAY" && tabela == "TABLE")
+			else if (comanda == "DISPLAY" && tabela == "TABLE")
 			{
 				
 				cin >> nume_tabela2;
@@ -110,19 +157,25 @@ public:
 				}
 				if (ok == 0)
 					cout << "Nu s-a gasit tabela ceruta";
+				
 			}
 			
 
-			if (comanda == "DROP" && tabela == "TABLE")
+			else if (comanda == "DROP" && tabela == "TABLE")
 			{
 				nume_tabela = "";
 				cin >> nume_tabela;
 				int ok = 0;
 				for (int i = 0; i < 10; i++)
 				{
+					stringstream a;
+
+					a << i;
 					if (A[i].nume_tabela == nume_tabela)
 					{
 						A[i].DROP_TABLE(A + i);
+						remove(filename.c_str());
+						
 						ok = 1; i = 10;
 					}
 
@@ -130,6 +183,160 @@ public:
 				}
 				if (ok == 0)
 					cout << "Nu s-a gasit tabela ceruta";
+				cout << endl;
+			}
+
+			else if (comanda == "SELECT"&&tabela=="FROM")
+			{
+				nume_tabela = "";
+				cout << "Cate coloane doriti sa afisati: " << endl;
+				cin >> numar;
+				cout << "Numele tabelei: " << endl;
+				cin >> nume_tabela;
+				for (int i = 0; i < 10; i++)
+				{
+					if (A[i].nume_tabela == nume_tabela)
+					{
+						if (numar == "ALL")
+						{
+							for (int j = 0; j < A[i].numar_coloane; j++)
+							{
+								vector_select[j] = A[i].nume_coloana[j];
+							}
+							///sa implementez pentru fiecare rand in parte, nu uita sa comentezi in TABELA_input sa se afis doar valorile.
+
+							for (int j = i; j < 100; j = j + 10)
+							{
+								B[j].SELECT_COLOANA(B + j, vector_select, A[i].numar_coloane);
+								cout << endl;
+								cout << B[j];
+							}
+
+							
+						}
+						else
+						{
+							cout << "Ce coloane afisati: " << endl;
+							for (int j = 0; j < stoi(numar); j++)
+							{
+								cin >> vector_select[j];
+							}
+							///sa implementez pentru fiecare rand in parte, nu uita sa comentezi in TABELA_input sa se afis doar valorile.
+							///de verificat daca se afiseaza bine;
+							for (int j = i; j < 100; j = j + 10)
+							{
+								B[j].SELECT_COLOANA(B + j, vector_select, A[i].numar_coloane);
+								cout << endl;
+								cout << B[j];
+							}
+
+						}
+						
+					}
+				}
+				
+				
+			}
+			
+			else if (comanda == "DELETE" && tabela == "FROM")
+			{
+				nume_tabela = "";
+				cout << "Numele tabelei: " << endl;
+				cin >> nume_tabela;
+				for (int i = 0; i < 10; i++)
+				{
+					if (nume_tabela == A[i].nume_tabela)
+					{
+						cout << "Ce coloana vreti sa stergeti?"<<endl;
+						cin >> numar;
+						for (int j = i; j < 100; j = j + 10)
+						{
+							files.open(filename.c_str(), ios::out | ios::app);
+							B[j].DELETE_COLOANA(B + j, numar);
+							
+							//ne gandim; 
+
+
+			/*				cout << endl;
+							cout << B[j];*/
+						}
+
+					}
+				}
+			}
+
+			else if (comanda == "UPDATE" && tabela == "SET")
+			{
+				nume_tabela = "";
+				cout << "Numele tabelei: " << endl;
+				cin >> nume_tabela;
+				for (int i = 0; i < 10; i++)
+				{
+					if (nume_tabela == A[i].nume_tabela)
+					{
+						cout << "Ce valoare din ce coloana vrei sa schimbi?" << endl;
+						cin >> numar;
+						cin >> ws;
+						cin >> nume_tabela2;
+
+						///de verificat dupa insert daca merge;
+						cout << "Cu ce valoare schimbati?" << endl;
+						cin >> nume;
+						for (int j = i; j < 100; j = j + 10)
+						{
+							B[j].UPDATE(B + j, A + i, nume, nume_tabela2, numar);
+
+							cout << B[j]<<endl;
+						}
+					}
+				}
+			}
+
+			else if (comanda == "INSERT" && tabela == "INTO")
+			{
+				ok = 0;
+				nume_tabela = "";
+				cin >> nume_tabela;
+				cin >> var;
+				for (int i = 0; i < 10; i++)
+				{	
+
+
+					if (nume_tabela == A[i].nume_tabela&&var=="VALUES")
+					{
+						for (int j = 0; j < A[i].numar_coloane; j++)
+						{
+							cin >> valori_implicite[j];
+							
+						}
+						
+						
+						for (int j = i; j < 100; j = j + 10)
+						{
+							if (B[j].valori_rand[0] =="0")
+							{	
+								///de vazut cum se face pentru a modifica un file specific;
+								files.open(filename.c_str(), ios::out | ios::app);
+								B[j].INSERT_COLOANA(B + j, valori_implicite, A[i].numar_coloane);
+								
+								files << endl;
+								files << B[j]<<endl;
+								
+								files.close();
+								ok = 1;
+								//cout << B[j];
+								//cout << endl;
+								//cout << j;
+							}
+							if (ok == 1)
+							{
+								break; j = 100;
+							}
+						}
+						
+					}
+					
+				}
 			}
 
 
@@ -139,6 +346,8 @@ public:
 		for (int i = 0; i < 10; i++)
 			cout << A[i];
 	}
+
+
 };
 
 
@@ -147,97 +356,5 @@ int main()
 {
 	Menu x;
 	x.menu();
-
-	////TABELA* A = new TABELA[2];
-
-	////A[1].setNume_Tabela("x");
-	////A[1].DISPLAY(A + 1, "x");
-
-	//
-	////string D[3] = { "NUME","PRENUME","VARSTA" };
-
-	//////cout << T1.nume_coloana[1] << endl;
-	//////cout << T1;
-	//TABELA* A = new TABELA[10];
-	//
-	//string vectori_test[3] = { "NUME","PRENUME","VARSTA" };
-	//
-	//string vectori_test2[3] = { "VARCHAR","VARCHAR","INTEGER" };
-	//int dim[3] = { 1,2,3 };
-	//A[3].CREATE_TABLE(A + 3, "x", vectori_test, 3, vectori_test2, 3, dim);
-	//cout <<A[3];
-
-	//
-	//	string **array = new string*[2];
-
-	//	for (int i = 1; i <= 2; ++i)
-	//		array[i] = new string[3];
-	//
-
-	//	
-	//		
-	//	TABELA_INPUT X(array, 3, 2, A + 3);
-	//	cout << X;
-
-	//string B[3] = { "VARCHAR","VARCHAR","INTEGER" };
-
-	//int vector[3] = { 3,3,3 };
-
-	//TABELA* A = new TABELA[3];
-
-
-	//A[1] = TABELA(D, 3, B, 3, vector);
-
-	//A[1].DISPLAY(A + 1,"student");
-
-	//cout << endl;
-
-	//A[2].CREATE_TABLE(A + 2,"elev", D, 3, B, 3, vector);
-
-	//cout << A[2];
-	//cout << endl;
-
-	/////A[1].DROP_TABLE(A + 1);
-
-
-
-	//cout << endl;
-	//cout << "Verificari pentru tabela_input" << endl;
-
-	//string valori[3] = { "M","A","20" };
-
-	//TABELA_INPUT* tabela_input = new TABELA_INPUT[3];
-
-	//
-
-	//tabela_input[1] = TABELA_INPUT(valori, 3, A + 1);
-	//cout << tabela_input[1]<<endl;
-
-	/////TESTARE SELECT
-	//string up[1] = { "NUME" };
-	//tabela_input[1].SELECT_COLOANA(tabela_input + 1, up, 1);
-	//cout << endl;
-	//string select[3] = { "VARSTA","NUME","PRENUME" };
-	//tabela_input[1].SELECT_COLOANA(tabela_input + 1, select, 3);
-
-
-	/////TESTARE UPDATE;
-
-	//tabela_input[1].UPDATE(tabela_input + 1, A + 1, "ANI", "VARSTA");
-	//cout << tabela_input[1];
-	//cout << endl;
-
-
-	/////TESTARE DELETE
-	//tabela_input[1].DELETE_COLOANA(tabela_input + 1, "NUME");
-	//cout << tabela_input[1];
-	//cout << endl;
-	//
-	/////TESTARE INSERT
-	//
-	//string valori2[3] = { "M","A","20" };
-	//tabela_input[1].INSERT_COLOANA(tabela_input + 1, valori2, 3);
-
-
 
 }
