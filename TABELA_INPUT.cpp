@@ -1,8 +1,8 @@
+
 #include <iostream>
 #include <string>
 #include "TABELA_INPUT.h"
-#include <fstream>
-
+#include<fstream>
 
 using namespace std;
 
@@ -139,14 +139,19 @@ TABELA_INPUT::TABELA_INPUT(string* valori_rand, int dim, TABELA* x)
 
 }
 
-void TABELA_INPUT::UPDATE(TABELA_INPUT* x, TABELA* tab, string nume, string coloanaDeSchimbat)
-{
+void TABELA_INPUT::UPDATE(TABELA_INPUT* x, TABELA* tab, string nume, string coloanaDeSchimbat,string valoare)
+{ 
 	for (int i = 0; i < x->numar_coloane; i++)
 	{
 		if (x->nume_coloana[i] == coloanaDeSchimbat)
 		{
-			x->nume_coloana[i] = nume;
-			tab->nume_coloana[i] = nume;
+
+			if (x->valori_rand[i] == valoare)
+			{
+				x->valori_rand[i] = nume;
+			}
+
+			
 		}
 	}
 }
@@ -204,7 +209,7 @@ void TABELA_INPUT::INSERT_COLOANA(TABELA_INPUT* x, string* valori_adaugate, int 
 	}
 
 }
-void TABELA_INPUT:: SELECT_COLOANA(TABELA_INPUT* x, string* coloane, int numar)
+void TABELA_INPUT::SELECT_COLOANA(TABELA_INPUT* x, string* coloane, int numar)
 {
 	for (int i = 0; i < numar; i++)
 	{
@@ -212,7 +217,8 @@ void TABELA_INPUT:: SELECT_COLOANA(TABELA_INPUT* x, string* coloane, int numar)
 		{
 			if (coloane[i] == x->nume_coloana[j])
 			{
-				cout << coloane[i] << " " << x->valori_rand[j] << endl;
+				cout << coloane[i] << " " << endl;
+				cout<<x->valori_rand[j] << endl;
 			}
 		}
 	}
@@ -242,7 +248,7 @@ void TABELA_INPUT::serializare()
 {
 	ofstream g("tabela_input.bin", ios::binary);
 	g.write((char*)&dim, sizeof(dim));
-	for (int i = 0; i<dim; i++)
+	for (int i = 0; i < dim; i++)
 	{
 		g.write((char*)&valori_rand[i], sizeof(valori_rand[i]));
 	}
@@ -277,38 +283,38 @@ ostream& operator<<(ostream& o, TABELA_INPUT tab)
 	return o;
 }
 
- istream& operator>>(istream& i, TABELA_INPUT& tab)
- {
+istream& operator>>(istream& i, TABELA_INPUT& tab)
+{
 
-	 i >> (TABELA&)tab;
+	i >> (TABELA&)tab;
 
-	 cout << "Numar de coloane: ";
-	 i >> tab.dim;
+	cout << "Numar de coloane: ";
+	i >> tab.dim;
 
-	 if (tab.valori_rand != nullptr)
-	 {
-		 delete[] tab.valori_rand;
-	 }
-	 cout << "Valorile de pe rand: ";
+	if (tab.valori_rand != nullptr)
+	{
+		delete[] tab.valori_rand;
+	}
+	cout << "Valorile de pe rand: ";
 
-	 if (tab.dim > 0)
-	 {
-		 tab.valori_rand = new string[tab.dim];
-		 for (int j = 0; j < tab.dim; j++)
-		 {
-			 i >> tab.valori_rand[j];
-		 }
+	if (tab.dim > 0)
+	{
+		tab.valori_rand = new string[tab.dim];
+		for (int j = 0; j < tab.dim; j++)
+		{
+			i >> tab.valori_rand[j];
+		}
 
-	 }
-	 else
-	 {
-		 tab.dim = 0;
-		 tab.valori_rand = nullptr;
-	 }
+	}
+	else
+	{
+		tab.dim = 0;
+		tab.valori_rand = nullptr;
+	}
 
 
-	 return i;
- }
+	return i;
+}
 
 ofstream& operator<<(ofstream& o, TABELA_INPUT tab)
 {
