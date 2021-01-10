@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "TABELA_INPUT.h"
+#include <fstream>
 
 
 using namespace std;
