@@ -24,15 +24,16 @@ public:
 	TABELA& operator=(const TABELA&);
 	void DROP_TABLE(TABELA*);
 	void DISPLAY(TABELA*,string);
-	void serializare();
-	void deserializare();
 	friend ostream& operator<<(ostream&, TABELA);
 	friend istream& operator>>(istream&, TABELA&);
+	void serializare();
+	void deserializare();
+
 	friend ofstream& operator<<(ofstream&, TABELA);
 	friend ifstream& operator>>(ifstream&, TABELA&);
-	
-private:
 	string nume_tabela;
+private:
+	
 	int numar_coloane = 0;
 	string* nume_coloana = nullptr;
 	int numar_tip_coloana = 0;
