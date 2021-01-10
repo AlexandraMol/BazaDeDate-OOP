@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <string>
 #include "TABELA.h"
@@ -8,19 +7,18 @@ class TABELA_INPUT : public TABELA
 {
 	friend class Menu;
 public:
-	string* valori_rand = nullptr; 
-	int dim = 0;
+
 	TABELA tabela;
 	TABELA_INPUT();
 	~TABELA_INPUT();
-	TABELA_INPUT(const TABELA_INPUT&); 
+	TABELA_INPUT(const TABELA_INPUT&);
 	TABELA_INPUT& operator=(const TABELA_INPUT&);
 	TABELA_INPUT(string*, int, TABELA*);
 	void SELECT_COLOANA(TABELA_INPUT*, string*, int);
 	void DELETE_COLOANA(TABELA_INPUT*, string);
 	string* getValori_rand();
 	void setValori_rand(string*, int);
-	void UPDATE(TABELA_INPUT*, TABELA*, string, string);
+	void UPDATE(TABELA_INPUT*, TABELA*, string, string,string);
 	void INSERT_COLOANA(TABELA_INPUT*, string*, int);
 	void serializare();
 	void deserializare();
@@ -30,6 +28,9 @@ public:
 	friend ifstream& operator>>(ifstream&, TABELA_INPUT&);
 
 
-private:
 
+private:
+	string* valori_rand = nullptr;
+	int dim = 0;
+	int stare = 0;
 };
