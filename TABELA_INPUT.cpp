@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <string>
 #include "TABELA_INPUT.h"
@@ -139,8 +138,21 @@ TABELA_INPUT::TABELA_INPUT(string* valori_rand, int dim, TABELA* x)
 
 }
 
-void TABELA_INPUT::UPDATE(TABELA_INPUT* x, TABELA* tab, string nume, string coloanaDeSchimbat,string valoare)
-{ 
+void TABELA_INPUT::DISPLAY_INPUT(TABELA_INPUT* D, string nume_tabela)
+{
+	//for (int i = 0; i < D->numar_coloane; i++)
+	//	cout << D->nume_coloana[i] << " ";
+	//cout << endl;
+	for (int i = 0; i < dim; i++)
+	{
+		cout << D->valori_rand[i] << " ";
+	}
+	cout << endl;
+}
+
+
+void TABELA_INPUT::UPDATE(TABELA_INPUT* x, TABELA* tab, string nume, string coloanaDeSchimbat, string valoare)
+{
 	for (int i = 0; i < x->numar_coloane; i++)
 	{
 		if (x->nume_coloana[i] == coloanaDeSchimbat)
@@ -151,17 +163,19 @@ void TABELA_INPUT::UPDATE(TABELA_INPUT* x, TABELA* tab, string nume, string colo
 				x->valori_rand[i] = nume;
 			}
 
-			
+
 		}
 	}
+
+	cout << "TABLE UPDATED" << endl;
 }
 
 void TABELA_INPUT::INSERT_COLOANA(TABELA_INPUT* x, string* valori_adaugate, int dimensiune)
 {
-	int k = 0; ///gestionez de cate ori nu s-a indeplinit conditia ; trebuie cumva sa inchei subprogramul fortat cand nu merge;
+	int k = 0;
 	if (dimensiune != x->numar_coloane)
 	{
-		cout << "Numarul de valori nu indeplineste numarul de coloane ale tabelei";
+		cout << "Numarul de valori nu indeplineste numarul de coloane ale tabelei" << endl;
 		k++;
 
 	}
@@ -169,18 +183,19 @@ void TABELA_INPUT::INSERT_COLOANA(TABELA_INPUT* x, string* valori_adaugate, int 
 	{
 		for (int i = 0; i < dimensiune; i++)
 		{
-			if (x->tip_coloana[i] == "VARCHAR" && valori_adaugate[i].length() == x->dimensiune[i])
+			if (x->tip_coloana[i] == "VARCHAR" && valori_adaugate[i].length() <= x->dimensiune[i])
 			{
 				x->valori_rand[i] = valori_adaugate[i];
+
 			}
-			else if (valori_adaugate[i].length() == x->dimensiune[i])
+			else if (x->tip_coloana[i] == "VARCHAR" && valori_adaugate[i].length() > x->dimensiune[i])
 			{
-				cout << "Valorea adauga nu indeplineste dimensiunea prestabilita de tip VARCHAR";
+				cout << "Valorea adauga nu indeplineste dimensiunea prestabilita de tip VARCHAR" << endl;
 				k++;
 
 			}
 
-			if (x->tip_coloana[i] == "INTEGER")
+			if (x->tip_coloana[i] == "NUMBER")
 			{
 				int var;
 				var = stoi(valori_adaugate[i].c_str());
@@ -191,9 +206,9 @@ void TABELA_INPUT::INSERT_COLOANA(TABELA_INPUT* x, string* valori_adaugate, int 
 					number++;
 				}
 
-				if (number != x->dimensiune[i])
+				if (x->tip_coloana[i] == "NUMBER" && number > x->dimensiune[i])
 				{
-					cout << "Valorea adauga nu indeplineste dimensiunea prestabilita de INTEGER";
+					cout << "Valorea adauga nu indeplineste dimensiunea prestabilita de NUMBER" << endl;
 					k++;
 
 				}
@@ -218,10 +233,11 @@ void TABELA_INPUT::SELECT_COLOANA(TABELA_INPUT* x, string* coloane, int numar)
 			if (coloane[i] == x->nume_coloana[j])
 			{
 				cout << coloane[i] << " " << endl;
-				cout<<x->valori_rand[j] << endl;
+				cout << x->valori_rand[j] << endl;
 			}
 		}
 	}
+	cout << endl;
 }
 void TABELA_INPUT::DELETE_COLOANA(TABELA_INPUT* x, string nume)
 {
@@ -242,18 +258,21 @@ void TABELA_INPUT::DELETE_COLOANA(TABELA_INPUT* x, string nume)
 			x->dim--;
 		}
 	}
+	
 }
 
-void TABELA_INPUT::serializare()
+void TABELA_INPUT::serializare(string file, ofstream& g)
 {
-	ofstream g("tabela_input.bin", ios::binary);
+	g.open(file, ios::binary | ios::app);
 	g.write((char*)&dim, sizeof(dim));
 	for (int i = 0; i < dim; i++)
 	{
 		g.write((char*)&valori_rand[i], sizeof(valori_rand[i]));
 	}
+	g << endl;
 	g.close();
 }
+
 
 void TABELA_INPUT::deserializare()
 {
@@ -269,11 +288,6 @@ void TABELA_INPUT::deserializare()
 
 ostream& operator<<(ostream& o, TABELA_INPUT tab)
 {
-	o << (TABELA)tab << endl;
-
-	o << "Numar de coloane: ";
-	o << tab.dim << endl;
-
 	if (tab.valori_rand != nullptr)
 	{
 		for (int i = 0; i < tab.dim; i++)
@@ -318,10 +332,6 @@ istream& operator>>(istream& i, TABELA_INPUT& tab)
 
 ofstream& operator<<(ofstream& o, TABELA_INPUT tab)
 {
-	o << (TABELA)tab << endl;
-
-	o << "Numar de coloane: ";
-	o << tab.dim << endl;
 
 	if (tab.valori_rand != nullptr)
 	{
