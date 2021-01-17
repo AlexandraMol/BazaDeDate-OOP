@@ -1,3 +1,4 @@
+
 #include "TABELA.h"
 #include "TABELA_INPUT.h"
 #include <iostream>
@@ -122,7 +123,7 @@ TABELA::~TABELA()
 }
 
 TABELA::TABELA(const TABELA& tab)
-{	
+{
 	this->nume_tabela = tab.nume_tabela;
 	if (tab.dimensiune != nullptr && tab.numar_coloane != 0)
 	{
@@ -168,9 +169,16 @@ TABELA::TABELA(const TABELA& tab)
 
 }
 
+
+void TABELA::RENAME(TABELA* tab, string nume)
+{
+	tab->nume_tabela = nume;
+
+}
+
 TABELA::TABELA(string* nume_coloana, int numar_coloane, string* tip_coloana, int numar_tip_coloana, int* dimensiune)
 {
-	
+
 	if (nume_coloana != NULL && numar_coloane > 0)
 	{
 		this->numar_coloane = numar_coloane;
@@ -270,11 +278,30 @@ TABELA& TABELA::operator=(const TABELA& tab)
 	return *this;
 }
 
-
-
-void TABELA::CREATE_TABLE(TABELA* obj,string nume_tabela, string* nume_coloana, int numar_coloane, string* tip_coloana, int numar_tip_coloana, int* dimensiune)
+void::TABELA::REDIMENSIONARE(TABELA* x, string nume)
 {
-	
+	for (int i = 0; i < x->numar_coloane; i++)
+	{
+
+		if (x->nume_coloana[i] == nume)
+		{
+			for (int p = i; p < x->numar_coloane - 1; p++)
+			{
+				x->nume_coloana[p] = x->nume_coloana[p + 1];
+				x->tip_coloana[p] = x->tip_coloana[p + 1];
+
+
+			}
+			x->numar_coloane--;
+			x->numar_tip_coloana--;
+
+		}
+	}
+}
+
+void TABELA::CREATE_TABLE(TABELA* obj, string nume_tabela, string* nume_coloana, int numar_coloane, string* tip_coloana, int numar_tip_coloana, int* dimensiune)
+{
+
 
 	if (numar_coloane < 1 || numar_tip_coloana < 1)
 	{
@@ -312,7 +339,7 @@ void TABELA::CREATE_TABLE(TABELA* obj,string nume_tabela, string* nume_coloana, 
 				obj->tip_coloana[i] = tip_coloana[i];
 			}
 		}
-	
+
 	}
 }
 string TABELA::getNume_Tabela()
@@ -327,22 +354,23 @@ void TABELA::DROP_TABLE(TABELA* obj)
 {
 
 	obj->nume_coloana = nullptr;
-	obj->tip_coloana=nullptr;
-	obj->dimensiune=nullptr;
+	obj->tip_coloana = nullptr;
+	obj->dimensiune = nullptr;
 
 	obj->nume_tabela = "";
 	obj->numar_coloane = 0;
 	obj->numar_tip_coloana = 0;
 
-	
+
 	cout << "TABLE DROPPED";
-	
+
 }
 
-void TABELA::DISPLAY(TABELA* tabela,string nume_tabela)
+void TABELA::DISPLAY(TABELA* tabela, string nume_tabela)
 {
 	for (int i = 0; i < tabela->numar_coloane; i++)
-		cout << tabela->nume_coloana[i] << " " << tabela->tip_coloana[i] << " " << tabela->dimensiune[i] << endl;
+		cout << tabela->nume_coloana[i] <<" ";
+	cout << endl;
 }
 
 
@@ -350,7 +378,7 @@ void TABELA::DISPLAY(TABELA* tabela,string nume_tabela)
 ostream& operator<<(ostream& o, TABELA tab)
 {
 	o << "Nume tabela ";
-	o<< tab.nume_tabela << endl;
+	o << tab.nume_tabela << endl;
 	o << "Numar de coloane: ";
 	o << tab.numar_coloane << endl;
 
@@ -454,9 +482,9 @@ istream& operator>>(istream& in, TABELA& tab)
 
 
 
-void TABELA::serializare()
+void TABELA::serializare(string filename, ofstream& f)
 {
-	ofstream f("tabela.bin", ios::binary);
+	f.open(filename, ios::binary);
 	int lenght = nume_tabela.length();
 	f.write((char*)&lenght, sizeof(lenght));
 	f.write(nume_tabela.c_str(), lenght + 1);
@@ -474,6 +502,7 @@ void TABELA::serializare()
 	{
 		f.write((char*)&dimensiune[i], sizeof(dimensiune[i]));
 	}
+	f << endl;
 	f.close();
 }
 
@@ -579,33 +608,34 @@ ifstream& operator>>(ifstream& in, TABELA& tab)
 ofstream& operator<<(ofstream& out, TABELA t)
 {
 	out << t.nume_tabela << endl;
-	out << t.numar_coloane<<endl;
+
 	if (t.nume_coloana != nullptr && t.numar_coloane > 0)
 	{
-		for(int i=0;i<t.numar_coloane;i++)
-		out << *(t.nume_coloana+i)<<endl;
+		for (int i = 0; i < t.numar_coloane; i++)
+			out << *(t.nume_coloana + i) << " ";
 	}
 	else
 	{
 		out << "N/A";
 	}
-	out << t.numar_tip_coloana<<endl;
-	if (t.tip_coloana != nullptr && t.numar_tip_coloana > 0)
-	{	for(int i=0;i<t.numar_tip_coloana;i++)
-		out << *(t.tip_coloana+i)<<endl;
+
+	/*if (t.tip_coloana != nullptr && t.numar_tip_coloana > 0)
+	{
+		for (int i = 0; i < t.numar_tip_coloana; i++)
+			out << *(t.tip_coloana + i) << endl;
 	}
 	else
 	{
 		out << "N/A";
-	}
-	if (t.dimensiune != nullptr && t.numar_tip_coloana > 0)
+	}*/
+	/*if (t.dimensiune != nullptr && t.numar_tip_coloana > 0)
 	{
-		for(int i=0;i<t.numar_tip_coloana;i++)
-		out << *(t.dimensiune+i)<<endl;
+		for (int i = 0; i < t.numar_tip_coloana; i++)
+			out << *(t.dimensiune + i) << endl;
 	}
 	else
 	{
 		out << "N/A";
-	}
+	}*/
 	return out;
 }
